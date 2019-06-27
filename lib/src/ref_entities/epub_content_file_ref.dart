@@ -36,10 +36,6 @@ abstract class EpubContentFileRef {
     ArchiveFile contentFileEntry = epubBookRef.EpubArchive().files.firstWhere(
         (ArchiveFile x) => x.name == contentFilePath,
         orElse: () => null);
-    if (contentFileEntry == null) {
-      throw new Exception(
-          "EPUB parsing error: file ${contentFilePath} not found in archive.");
-    }
     return contentFileEntry;
   }
 
@@ -49,9 +45,8 @@ abstract class EpubContentFileRef {
 
   List<int> openContentStream(ArchiveFile contentFileEntry) {
     List<int> contentStream = new List<int>();
-    if (contentFileEntry.content == null) {
-      throw new Exception(
-          'Incorrect EPUB file: content file \"${FileName}\" specified in manifest is not found.');
+    if (contentFileEntry == null || contentFileEntry.content == null) {
+      return new List();
     }
     contentStream.addAll(contentFileEntry.content);
     return contentStream;
